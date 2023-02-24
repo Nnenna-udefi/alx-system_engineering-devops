@@ -3,16 +3,16 @@
 
 for numb in {1..100}
 do
- if (( $numb % 3 == 0 && $numb % 5 == 0 ))
+ if (( numb % 3 == 0 && numb % 5 == 0 ))
  then
    echo "FizzBuzz"
- elif (( $numb % 3 == 0 ))
+ elif (( numb % 3 == 0 ))
  then
    echo "Fizz"
- elif (( $numb % 5 == 0 ))
+ elif (( numb % 5 == 0 ))
  then
    echo "Buzz"
  else
-   echo "$numb"
+   echo "numb"
  fi
 done
