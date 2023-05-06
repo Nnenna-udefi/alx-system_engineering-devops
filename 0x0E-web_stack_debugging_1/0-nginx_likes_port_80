@@ -8,6 +8,6 @@
 # check if there any firewalls blocking traffic to port 80
 
 # modify the default server block config to listen on port 80
-sudo sed -i 's/listen 80 default_server/listen 80/g' /etc/nginx/sites-available/default
+sudo sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
 # restart nginx
 sudo service nginx restart
