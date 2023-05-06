@@ -1,4 +1,5 @@
-global
+
+bal
         log /dev/log    local0
         maxconn 2048
         tune.ssl.default-dh-param 2048
@@ -38,13 +39,13 @@ defaults
         errorfile 504 /etc/haproxy/errors/504.http
 
 frontend www-http
-    bind 52.207.208.216:80
-    reqadd X-Forwarded-Proto:\ http
+    bind *:80
+    http-request add-header X-Forwarded-Proto: http
     default_backend www-backend
 
 frontend www-https
-    bind 52.207.208.216:443 ssl crt /etc/haproxy/certs/lb-01.nnennaudefi.tech.pem
-    reqadd X-Forwarded-Proto:\ https
+    bind *:443 ssl crt /etc/haproxy/certs/lb-01.nnennaudefi.tech.pem
+    http-request add-header X-Forwarded-Proto: https
     acl letsencrypt-acl path_beg /.well-known/acme-challenge/
     use_backend letsencrypt-backend if letsencrypt-acl
     default_backend www-backend
