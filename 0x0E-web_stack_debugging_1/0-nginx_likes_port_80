@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
-# script that configures a server to listen on port 80 of all the active IPv4
-
-# check if nginx is installed
-# check nginx status to see if its running
-# check nginx.conf file for any errors
-# stop any service using port 80
-# check if there any firewalls blocking traffic to port 80
+# script that configures a server to listen on port 80 of all the active IP
 
 # modify the default server block config to listen on port 80
 sudo sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
