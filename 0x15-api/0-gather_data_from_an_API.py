@@ -15,7 +15,7 @@ if __name__ == '__main__':
     todos = res.json()
 
     # filter completed task
-    completed_tasks = [todo for todo in todos if todo['completed']]
+    completed_tasks = [t.get("title") for t in todos if t.get("completed") is True]
 
     # get employee name
     user_respons = requests.get('https://jsonplaceholder.typicode.com/users/{}'
