@@ -1,31 +1,14 @@
 #!/usr/bin/python3
-"""
-    Script that uses a restful api for a given employee ID,
-    returns information about his/her TODO list progress.
-"""
+"""Returns to-do list information for a given employee ID."""
 import requests
 import sys
 
+if __name__ == "__main__":
+    url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(url + "users/{}".format(sys.argv[1])).json()
+    todos = requests.get(url + "todos", params={"userId": sys.argv[1]}).json()
 
-if __name__ == '__main__':
-    """Makes a GET request to the restful API endpoint"""
-    employee_id = sys.argv[1]
-    res = requests.get('https://jsonplaceholder.typicode.com/todos?userId={}'
-                       .format(employee_id))
-    todos = res.json()
-
-    # filter completed task
-    completed_tasks = [t.get("title") for t in todos if t.get("completed") is True]
-
-    # get employee name
-    user_respons = requests.get('https://jsonplaceholder.typicode.com/users/{}'
-                                .format(employee_id))
-    user = user_respons.json()
-    employee_name = user['name']
-
-    # print the employee's todo list progress
-    print('Employee {} is done with tasks({}/{}):'
-          .format(employee_name, len(completed_tasks), len(todos)))
-
-    for task in completed_tasks:
-        print('\t {}'.format(task['title']))
+    completed = [t.get("title") for t in todos if t.get("completed") is True]
+    print("Employee {} is done with tasks({}/{}):".format(
+        user.get("name"), len(completed), len(todos)))
+    [print("\t {}".format(c)) for c in completed]
