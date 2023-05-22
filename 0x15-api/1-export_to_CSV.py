@@ -22,12 +22,12 @@ def get_employee_todo_progress(employee_id):
     user_respons = requests.get('https://jsonplaceholder.typicode.com/users/{}'
                                 .format(employee_id))
     user = user_respons.json()
-    employee_name = user['name']
+    employee_name = user['username']
 
     # exports data to csv
     filename = '{}.csv'.format(employee_id)
     with open(filename, 'w', newline='') as file:
-        writer = csv.writer(file)
+        writer = csv.writer(file, quoting=csv.QUOTE_ALL)
         for task in todos:
             writer.writerow([employee_id, employee_name,
                             task['completed'], task['title']])
