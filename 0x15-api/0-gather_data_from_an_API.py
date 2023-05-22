@@ -7,8 +7,9 @@ import requests
 import sys
 
 
-def get_employee_todo_progress(employee_id):
+if __name__ == '__main__':
     """Makes a GET request to the restful API endpoint"""
+    employee_id = sys.argv[1]
     res = requests.get('https://jsonplaceholder.typicode.com/todos?userId={}'
                        .format(employee_id))
     todos = res.json()
@@ -28,8 +29,3 @@ def get_employee_todo_progress(employee_id):
 
     for task in completed_tasks:
         print('\t{}'.format(task['title']))
-
-
-if __name__ == '__main__':
-    employee_id = int(sys.argv[1])
-    get_employee_todo_progress(employee_id)
