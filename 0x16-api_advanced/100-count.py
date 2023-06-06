@@ -13,7 +13,8 @@ def count_words(subreddit, word_list, after=None, word_count=None):
     if word_count is None:
         word_count = {}
 
-    url = "https://www.reddit.com/r/{}/hot.json?limit=100&after={}".format(subreddit, after)
+    url = "https://www.reddit.com/r/{}/hot.json?limit=100&after={}".format(
+                               subreddit, after)
 
     headers = {
         "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
@@ -46,10 +47,13 @@ def count_words(subreddit, word_list, after=None, word_count=None):
 
             # If there is an after value, recursively call the function
             if after:
-                return count_words(subreddit, word_list, after=after, word_count=word_count)
+                return count_words(subreddit, word_list, after=after,
+                                   word_count=word_count)
             else:
-                # Print the results in descending count order, then alphabetically
-                sorted_words = sorted(word_count.items(), key=lambda x: (-x[1], x[0].lower()))
+                # Print the results in descending count order,
+                # then alphabetically
+                sorted_words = sorted(word_count.items(),
+                                      key=lambda x: (-x[1], x[0].lower()))
                 for word, count in sorted_words:
                     print("{}: {}".format(word.lower(), count))
 
