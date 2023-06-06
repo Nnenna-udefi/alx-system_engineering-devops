@@ -13,8 +13,7 @@ def count_words(subreddit, word_list, after=None, word_count=None):
     if word_count is None:
         word_count = {}
 
-    url = "https://www.reddit.com/r/{}/hot.json?limit=100&after={after}"
-            .format(subreddit)
+    url = "https://www.reddit.com/r/{}/hot.json?limit=100&after={}".format(subreddit, after)
 
     headers = {
         "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
