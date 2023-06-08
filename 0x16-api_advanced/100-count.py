@@ -17,7 +17,7 @@ def count_words(subreddit, word_list, after=None, word_count=None):
                                subreddit, after)
 
     headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+        "User-Agent": "ubuntu"
     }
     try:
         # Send the HTTP GET request
