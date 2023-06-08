@@ -1,48 +1,63 @@
 #!/usr/bin/python3
-"""Contains the count_words function"""
+"""recursive function that queries the Reddit API,
+    parses the title of all hot articles,
+    prints a sorted count of given keywords
+"""
 import requests
 
 
-def count_words(subreddit, word_list, found_list=[], after=None):
-    '''Prints counts of given words found in hot posts of a given subreddit.
+def count_words(subreddit, word_list, after=None, word_count=None):
+    """function that prints a sorted count of given keywords from the hot
+        articles titles parsed
+    """
+    if word_count is None:
+        word_count = {}
 
-    Args:
-        subreddit (str): The subreddit to search.
-        word_list (list): The list of words to search for in post titles.
-        found_list (obj): Key/value pairs of words/counts.
-        after (str): The parameter for the next page of the API results.
-    '''
     url = "https://www.reddit.com/r/{}/hot.json?limit=100&after={}".format(
                                subreddit, after)
 
     headers = {
-            "User-Agent": 'test45'
+        "User-Agent": "ubuntu"
     }
-    if after is None:
-        word_list = [word.lower() for word in word_list]
-
-    response = requests.get(url, headers=headers,
+    try:
+        # Send the HTTP GET request
+        response = requests.get(url, headers=headers,
                                 allow_redirects=False)
-    if response.status_code == 200:
-        posts = response.json()['data']
-        aft = posts['after']
-        posts = posts['children']
-        for post in posts:
-            title = post['data']['title'].lower()
-            for word in title.split(' '):
-                if word in word_list:
-                    found_list.append(word)
-        if aft is not None:
-            count_words(subreddit, word_list, found_list, aft)
+
+        # Check the response status code
+        if response.status_code == 200:
+            # Extract the JSON data from the response
+            data = response.json()
+
+            # Extract the posts from the JSON data
+            posts = data["data"]["children"]
+
+            # Extract the after value for pagination
+            after = data["data"]["after"]
+
+            # Count the occurrences of keywords in the titles
+            for post in posts:
+                title = post["data"]["title"].lower()
+                for word in word_list:
+                    if word.lower() in title:
+                        if word not in word_count:
+                            word_count[word] = 1
+                        else:
+                            word_count[word] += 1
+
+            # If there is an after value, recursively call the function
+            if after:
+                return count_words(subreddit, word_list, after=after,
+                                   word_count=word_count)
+            else:
+                # Print the results in descending count order,
+                # then alphabetically
+                sorted_words = sorted(word_count.items(),
+                                      key=lambda x: (-x[1], x[0].lower()))
+                for word, count in sorted_words:
+                    print("{}: {}".format(word.lower(), count))
+
         else:
-            result = {}
-            for word in found_list:
-                if word.lower() in result.keys():
-                    result[word.lower()] += 1
-                else:
-                    result[word.lower()] = 1
-            for key, value in sorted(result.items(), key=lambda item: item[1],
-                                     reverse=True):
-                print('{}: {}'.format(key, value))
-    else:
-        return
+            return None
+    except requests.exceptions.RequestException:
+        return None
