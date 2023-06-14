@@ -1,12 +1,33 @@
-# Fix problem of high amount files opened
-
-exec {'replace-1':
-  provider => shell,
-  command  => 'sudo sed -i "s/nofile 5/nofile 50000/" /etc/security/limits.conf',
-  before   => Exec['replace-2'],
+# Create the "holberton" user
+user { 'holberton':
+  ensure     => 'present',
+  home       => '/home/holberton',
+  managehome => true,
+  shell      => '/bin/bash',
 }
 
-exec {'replace-2':
-  provider => shell,
-  command  => 'sudo sed -i "s/nofile 4/nofile 40000/" /etc/security/limits.conf',
+# Allow the "holberton" user to log in
+file { '/etc/ssh/sshd_config':
+  ensure  => 'file',
+  notify  => Service['ssh'],
 }
+
+case $::osfamily {
+  'Debian': {
+    $service_name = 'ssh'
+  }
+  'RedHat': {
+    $service_name = 'sshd'
+  }
+  default: {
+    fail("Unsupported operating system family: ${::osfamily}")
+  }
+}
+
+service { 'ssh':
+  ensure => 'running',
+  enable => true,
+  name   => $service_name,
+}
+
+# Additional configuration steps if required
